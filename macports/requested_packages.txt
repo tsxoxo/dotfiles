@@ -1,0 +1,6 @@
+The following ports are currently installed:
+  eza @0.20.24_0+doc+git (active)
+  fd @10.2.0_0 (active)
+  neovim @0.10.2_0 (active)
+  ripgrep @14.1.1_0 (active)
+  zoxide @0.9.7_0 (active)
