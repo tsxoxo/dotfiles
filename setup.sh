@@ -397,7 +397,14 @@ add_dotfile() {
         mkdir -p "$DOTFILES_DIR/$target_dir"
         
         # Backup and link
-        backup_and_link "$source" "$DOTFILES_DIR/$target_dir/$(basename "$source")"
+	# Handle files and directories differently
+	if [ -d "$source" ]; then
+		# For directories, don't add basename
+		backup_and_link "$source" "$DOTFILES_DIR/$target_dir"
+	else
+		# For files, keep the normal behavior
+		backup_and_link "$source" "$DOTFILES_DIR/$target_dir/$(basename "$source")"
+	fi
         
         # Update README
         update_readme
