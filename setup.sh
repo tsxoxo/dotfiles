@@ -232,32 +232,42 @@ EOF
 update_readme() {
     log "Updating README file"
     
-    # Get the current list of tracked files
+    # Only create README if it doesn't exist
+    if [ ! -f "$README_FILE" ]; then
+        log "Creating new README file"
+        create_readme
+        return
+    }
+    
+    # If README exists, just add the tracked files to the Contents section
     local tracked_files=""
-    grep -v "^#" "$CONFIG_FILE" | grep -v "^$" | while IFS= read -r line || [ -n "$line" ]; do
+    
+    # Use a temporary file to capture the loop output
+    local temp_tracked_file=$(mktemp)
+    
+    # Process each line and write to temp file
+    grep -v "^#" "$CONFIG_FILE" | grep -v "^$" | while IFS= read -r line; do
         IFS='|' read -r source target_dir description <<< "$line"
-        tracked_files="${tracked_files}- ${target_dir}: ${description:-Configuration for $(basename "$source")}\n"
+        echo "- ${target_dir}: ${description:-Configuration for $(basename "$source")}" >> "$temp_tracked_file"
     done
     
-    # Update the Contents section of the README
-    awk -v tracked="$tracked_files" '
-    /^## Contents$/,/^## / {
-        if (/^## Contents$/) {
-            print;
-            print "\nThe repository includes configurations for:\n";
-            printf tracked;
-            in_contents = 1;
-        } else if (/^## / && in_contents) {
-            in_contents = 0;
-            print;
-        } else if (!in_contents) {
-            print;
-        }
-    }
-    !in_contents { print }
-    ' "$README_FILE" > "${README_FILE}.tmp"
+    # Read from temp file into variable
+    tracked_files=$(cat "$temp_tracked_file")
+    rm -f "$temp_tracked_file"
     
-    mv "${README_FILE}.tmp" "$README_FILE"
+    # Use sed instead of awk to only update the Contents section
+    local temp_readme=$(mktemp)
+    
+    # Find the Contents section and replace it
+    sed -n '1,/^## Contents$/p' "$README_FILE" > "$temp_readme"
+    echo -e "\nThe repository includes configurations for:\n" >> "$temp_readme"
+    echo -e "$tracked_files" >> "$temp_readme"
+    
+    # Append the rest of the file after the Contents section
+    sed -n '/^## Contents$/,/^## /p' "$README_FILE" | tail -n +3 | sed -n '/^## /,$p' >> "$temp_readme"
+    
+    # Move the temporary file to the README
+    mv "$temp_readme" "$README_FILE"
 }
 
 # Function to check if a symlink is correctly set up
