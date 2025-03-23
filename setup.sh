@@ -237,7 +237,6 @@ update_readme() {
         log "Creating new README file"
         create_readme
         return
-    }
     
     # If README exists, just add the tracked files to the Contents section
     local tracked_files=""
@@ -417,7 +416,7 @@ add_dotfile() {
 	fi
         
         # Update README
-        update_readme
+        # update_readme
         
         # Commit changes
         cd "$DOTFILES_DIR" || error "Could not change to $DOTFILES_DIR"
@@ -464,7 +463,7 @@ remove_dotfile() {
         mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
         
         # Update README
-        update_readme
+        # update_readme
         
         # Commit changes
         cd "$DOTFILES_DIR" || error "Could not change to $DOTFILES_DIR"
@@ -654,7 +653,7 @@ main() {
                 show_diff
                 ;;
             update-readme)
-                update_readme
+                # update_readme
                 commit_changes
                 ;;
             help)
