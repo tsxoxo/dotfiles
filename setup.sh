@@ -229,45 +229,45 @@ EOF
 }
 
 # Update the README file with the current list of dotfiles
-update_readme() {
-    log "Updating README file"
-    
-    # Only create README if it doesn't exist
-    if [ ! -f "$README_FILE" ]; then
-        log "Creating new README file"
-        create_readme
-        return
-    
-    # If README exists, just add the tracked files to the Contents section
-    local tracked_files=""
-    
-    # Use a temporary file to capture the loop output
-    local temp_tracked_file=$(mktemp)
-    
-    # Process each line and write to temp file
-    grep -v "^#" "$CONFIG_FILE" | grep -v "^$" | while IFS= read -r line; do
-        IFS='|' read -r source target_dir description <<< "$line"
-        echo "- ${target_dir}: ${description:-Configuration for $(basename "$source")}" >> "$temp_tracked_file"
-    done
-    
-    # Read from temp file into variable
-    tracked_files=$(cat "$temp_tracked_file")
-    rm -f "$temp_tracked_file"
-    
-    # Use sed instead of awk to only update the Contents section
-    local temp_readme=$(mktemp)
-    
-    # Find the Contents section and replace it
-    sed -n '1,/^## Contents$/p' "$README_FILE" > "$temp_readme"
-    echo -e "\nThe repository includes configurations for:\n" >> "$temp_readme"
-    echo -e "$tracked_files" >> "$temp_readme"
-    
-    # Append the rest of the file after the Contents section
-    sed -n '/^## Contents$/,/^## /p' "$README_FILE" | tail -n +3 | sed -n '/^## /,$p' >> "$temp_readme"
-    
-    # Move the temporary file to the README
-    mv "$temp_readme" "$README_FILE"
-}
+# update_readme() {
+#     log "Updating README file"
+#
+#     # Only create README if it doesn't exist
+#     if [ ! -f "$README_FILE" ]; then
+#         log "Creating new README file"
+#         create_readme
+#         return
+#
+#     # If README exists, just add the tracked files to the Contents section
+#     local tracked_files=""
+#
+#     # Use a temporary file to capture the loop output
+#     local temp_tracked_file=$(mktemp)
+#
+#     # Process each line and write to temp file
+#     grep -v "^#" "$CONFIG_FILE" | grep -v "^$" | while IFS= read -r line; do
+#         IFS='|' read -r source target_dir description <<< "$line"
+#         echo "- ${target_dir}: ${description:-Configuration for $(basename "$source")}" >> "$temp_tracked_file"
+#     done
+#
+#     # Read from temp file into variable
+#     tracked_files=$(cat "$temp_tracked_file")
+#     rm -f "$temp_tracked_file"
+#
+#     # Use sed instead of awk to only update the Contents section
+#     local temp_readme=$(mktemp)
+#
+#     # Find the Contents section and replace it
+#     sed -n '1,/^## Contents$/p' "$README_FILE" > "$temp_readme"
+#     echo -e "\nThe repository includes configurations for:\n" >> "$temp_readme"
+#     echo -e "$tracked_files" >> "$temp_readme"
+#
+#     # Append the rest of the file after the Contents section
+#     sed -n '/^## Contents$/,/^## /p' "$README_FILE" | tail -n +3 | sed -n '/^## /,$p' >> "$temp_readme"
+#
+#     # Move the temporary file to the README
+#     mv "$temp_readme" "$README_FILE"
+# }
 
 # Function to check if a symlink is correctly set up
 is_correctly_linked() {

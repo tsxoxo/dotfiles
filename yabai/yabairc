@@ -7,8 +7,8 @@
 # see this wiki page for information:
 #  - https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)#configure-scripting-addition
 #
-# yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-# sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
 #
 
 # global settings
@@ -42,6 +42,30 @@ yabai -m config                                 \
     mouse_modifier               fn             \
     mouse_action1                move           \
     mouse_action2                resize         \
-    mouse_drop_action            swap
+    mouse_drop_action            swap		\
+    debug_output		 on
+
+# # Space labels
+yabai -m space 1 --label term
+yabai -m space 2 --label browse
+yabai -m space 3 --label music
+# yabai -m space 4 --label media
+# yabai -m space 5 --label misc
+
+# # Rules for specific apps to be unmanaged
+# yabai -m rule --add app="^System Preferences$" manage=off
+# yabai -m rule --add app="^System Settings$" manage=off
+# yabai -m rule --add app="^Calculator$" manage=off
+# yabai -m rule --add app="^Karabiner-Elements$" manage=off
+# yabai -m rule --add app="^QuickTime Player$" manage=off
+# yabai -m rule --add app="^Finder$" manage=off
+# yabai -m rule --add app="^Digital Colou?r Meter$" manage=off
+# yabai -m rule --add app="^Preview$" manage=off
+#
+# # Rules for apps mentioned in requirements
+# yabai -m rule --add app="^Google Chrome$" space=primary
+# yabai -m rule --add app="^WezTerm$" space=terminal
+# yabai -m rule --add app="^Spotify$" space=media
+
 
 echo "yabai configuration loaded.."
