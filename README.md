@@ -13,7 +13,11 @@ The repository includes configurations for:
 - git: Git configuration
 - karabiner: Keyboard customization
 - wezterm: Terminal emulator settings
-- yabai: tiling manager
+
+### TODO
+
+- Hammerspoon
+- tmux
 
 ## Installation
 
