@@ -61,7 +61,7 @@ return {
     local builtin = require('telescope.builtin')
     keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
     keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-    keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
+    keymap.set('n', '<leader>fg', builtin.git_files, { desc = 'Telescope git files' })
     keymap.set('n', '<leader>fc', builtin.commands, { desc = 'Telescope commands' })
     keymap.set('n', '<leader>fk', builtin.keymaps, { desc = 'Telescope keymaps' })
   end

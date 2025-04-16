@@ -105,8 +105,6 @@ fi
 
 alias zshconf="nvim ~/.zshrc"
 
-alias zhome="z ~"
-
 # Specific software
 alias eza=" eza -1F --color=always --icons=always --reverse --sort=Name"
 alias chrome="open_with_chrome"
