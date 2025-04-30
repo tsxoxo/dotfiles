@@ -24,21 +24,27 @@ return {
 		mason_lspconfig.setup({
 			ensure_installed = {
 				"html",
+				"emmet_ls",
 				"cssls",
 				"tailwindcss",
-				-- TS support in Vue files.
-				"ts_ls",
+				"ts_ls", -- TS support in Vue files.
 				"volar",
 				"lua_ls",
-				"emmet_ls",
 				"bashls",
 			},
 		})
 
 		mason_tool_installer.setup({
 			ensure_installed = {
-				"stylua",
+				-- DAPs (Debug)
+				"bash-debug-adapter",
+				-- Linters
 				"shellcheck",
+				"eslint_d",
+				-- Formatters
+				"prettier",
+				"stylua",
+				"shfmt",
 			},
 		})
 	end,

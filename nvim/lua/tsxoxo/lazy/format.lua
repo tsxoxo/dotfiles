@@ -8,6 +8,7 @@ return {
 			formatters_by_ft = {
 				javascript = { "prettier" },
 				typescript = { "prettier" },
+				vue = { "prettier" },
 				-- javascriptreact = { "prettier" },
 				-- typescriptreact = { "prettier" },
 				-- svelte = { "prettier" },
@@ -18,7 +19,7 @@ return {
 				markdown = { "prettier" },
 				lua = { "stylua" },
 				-- python = { "isort", "black" },
-				bash = { "shellcheck" },
+				sh = { "shfmt" },
 			},
 			format_on_save = {
 				lsp_fallback = true,

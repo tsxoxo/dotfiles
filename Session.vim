@@ -14,15 +14,26 @@ else
   set shortmess=aoO
 endif
 badd +30 wezterm/wezterm.lua
-badd +22 nvim/lua/tsxoxo/remap.lua
-badd +86 nvim/lua/tsxoxo/lazy/lsp/lspconfig.lua
-badd +34 nvim/lua/tsxoxo/lazy/lsp/mason.lua
-badd +21 nvim/lua/tsxoxo/lazy/format.lua
+badd +18 nvim/lua/tsxoxo/remap.lua
+badd +47 nvim/lua/tsxoxo/lazy/lsp/lspconfig.lua
+badd +43 nvim/lua/tsxoxo/lazy/lsp/mason.lua
+badd +34 nvim/lua/tsxoxo/lazy/format.lua
+badd +27 nvim/lua/tsxoxo/lazy/lint.lua
+badd +20 nvim/lua/tsxoxo/lazy/trouble.lua
+badd +72 nvim/lua/tsxoxo/lazy/telescope.lua
+badd +29 nvim/lazy-lock.json
+badd +13 nvim/lua/tsxoxo/lazy/todo-comments.lua
+badd +2 macports/installed_packages.txt
+badd +67 nvim/lua/tsxoxo/lazy/treesitter.lua
+badd +78 Session.vim
+badd +13 nvim/lua/tsxoxo/lazy/auto-session.lua
+badd +71 nvim/Session.vim
+badd +55 nvim/lua/tsxoxo/lazy/which-key.lua
 argglobal
 %argdel
-edit nvim/lua/tsxoxo/lazy/lsp/mason.lua
+edit nvim/lua/tsxoxo/remap.lua
 argglobal
-balt nvim/lua/tsxoxo/lazy/format.lua
+balt nvim/lua/tsxoxo/lazy/telescope.lua
 nnoremap <buffer> <silent>  rs :LspRestart
 let s:cpo_save=&cpo
 set cpo&vim
@@ -162,7 +173,7 @@ setlocal spellfile=
 setlocal spelllang=en
 setlocal spelloptions=noplainbuffer
 setlocal statuscolumn=
-setlocal statusline=%#lualine_a_normal#\ NORMAL\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_b_normal#\ \ main\ %#lualine_b_diff_added_normal#\ +10\ %#lualine_b_diff_modified_normal#~31\ %#lualine_transitional_lualine_b_diff_modified_normal_to_lualine_c_normal#%<%#lualine_c_normal#\ nvim/lua/tsxoxo/lazy/lsp/mason.lua\ %#lualine_c_normal#%=%#lualine_c_normal#\ [$]\ %#lualine_transitional_lualine_b_normal_to_lualine_c_normal#%#lualine_b_normal#\ 75%%\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_a_normal#\ \ 34:13\ 
+setlocal statusline=%#lualine_a_normal#\ NORMAL\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_b_normal#\ \ main\ %#lualine_b_diff_added_normal#\ +31\ %#lualine_b_diff_modified_normal#~22\ %#lualine_b_diff_removed_normal#-1\ %#lualine_transitional_lualine_b_diff_removed_normal_to_lualine_c_normal#%<%#lualine_c_normal#\ nvim/lua/tsxoxo/remap.lua\ %#lualine_c_normal#%=%#lualine_c_normal#\ [$]\ %#lualine_transitional_lualine_b_normal_to_lualine_c_normal#%#lualine_b_normal#\ 20%%\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_a_normal#\ \ 18:39\ 
 setlocal suffixesadd=.lua
 setlocal swapfile
 setlocal synmaxcol=3000
@@ -184,19 +195,19 @@ setlocal virtualedit=
 setlocal winbar=
 setlocal winblend=0
 setlocal nowinfixbuf
-setlocal nowinfixheight
+setlocal winfixheight
 setlocal nowinfixwidth
 setlocal winhighlight=
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 34 - ((33 * winheight(0) + 23) / 46)
+let s:l = 18 - ((9 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 34
-normal! 025|
+keepjumps 18
+normal! 039|
 lcd ~/dotfiles
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
@@ -211,7 +222,6 @@ if filereadable(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
 set hlsearch
-nohlsearch
 let g:this_session = v:this_session
 let g:this_obsession = v:this_session
 doautoall SessionLoadPost
