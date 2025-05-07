@@ -14,6 +14,10 @@
 
 export ZSH="/Users/me/.oh-my-zsh"
 
+# remove duplicate entries from path/PATH
+# see https://zsh.sourceforge.io/Guide/zshguide02.html#l24
+typeset -U path
+
 # Powerlevel10k. Should stay close to the top.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -154,9 +158,9 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="/opt/local/bin:$PATH"
 
 # Add app remover (thanks Claude).
-export PATH="$HOME/utils:$PATH"
+export PATH="$HOME/dev/utils:$PATH"
 # Add Cheatsheets.
-export PATH="$PATH:$HOME/docs/tech/bash/cheatsheets"
+export PATH="$PATH:$HOME/dev/bash/cheatsheets"
 
 # =============================================
 # VIM MODE
