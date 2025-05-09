@@ -48,6 +48,17 @@ return {
 					},
 				},
 			},
+			pickers = {
+				find_files = {
+					hidden = true,
+					-- cwd = require("telescope.utils").buffer_dir(),
+					cwd = vim.fn.expand("%:p:h"),
+				},
+				live_grep = {
+					cwd = require("telescope.utils").buffer_dir(),
+					-- cwd = vim.fn.expand("%:p:h"),
+				},
+			},
 		})
 
 		telescope.load_extension("fzf")

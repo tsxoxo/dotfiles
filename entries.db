@@ -1,0 +1,12 @@
+# Dotfiles configuration
+# Format: ID:SOURCE_PATH
+# Source can be both file or dir.
+# File will live under dotfiles/ID/file
+# Dir will live under dotfiles/ID
+
+zsh:/Users/me/.zshrc
+nvim:/Users/me/.config/nvim
+git:/Users/me/.gitconfig
+karabiner:/Users/me/.config/karabiner/karabiner.json
+wezterm:/Users/me/.config/wezterm
+
