@@ -47,8 +47,8 @@ HYPHEN_INSENSITIVE="true"
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Display dir contents when current working dir changes.
-function chpwd() {
-	eza -1F --color=always --icons=always
+chpwd() {
+  eza_col_icons
 }
 
 # View man docs in Neovim.
@@ -110,16 +110,20 @@ fi
 alias zshconf="nvim ~/.zshrc"
 
 # Specific software
-alias eza=" eza -1F --color=always --icons=always --reverse --sort=Name"
-alias chrome="open_with_chrome"
-
-function open_with_chrome() {
+open_with_chrome() {
   if [[ -z $1 ]] then
     echo "Usage: chrome <filename>"
   fi
 
   open -a "/Applications/Google Chrome.app/" $1
 }
+eza_col_icons() {
+  command eza -1F --color=always --icons=always --sort=name --group-directories-first "$@"
+}
+
+alias chrome="open_with_chrome"
+alias eza="eza_col_icons"
+alias l="eza_col_icons"
 
 ## Vim
 VIM_CONFIG_PATH=/Users/me/.config/nvim

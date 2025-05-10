@@ -19,40 +19,43 @@ badd +6 ~/dotfiles/setup.sh
 badd +8 ~/dotfiles/dotfiles.conf
 badd +11 ~/dotfiles/dotfiles_duplicate.conf
 badd +27 ~/dotfiles/manage.sh
-badd +10 ~/dotfiles/_setup.sh
+badd +624 ~/dotfiles/_setup.sh
 badd +12 test_entries.conf
-badd +13 check.sh
+badd +156 check.sh
 badd +53 nvim/lua/tsxoxo/lazy/telescope.lua
-badd +0 oil:///Users/me/dotfiles/
-badd +12 entries.db
+badd +1 oil:///Users/me/dotfiles/
+badd +13 entries.db
+badd +1 macports/requested_packages.txt
+badd +121 zsh/.zshrc
+badd +20 test_entries.db
 argglobal
 %argdel
 $argadd oil:///Users/me/dotfiles/
 edit check.sh
 argglobal
-balt entries.db
-nnoremap <buffer> <silent>  rs :LspRestart
+balt test_entries.db
 let s:cpo_save=&cpo
 set cpo&vim
 nnoremap <buffer> <silent>  D <Cmd>Telescope diagnostics bufnr=0
+nnoremap <buffer> <silent>  rs :LspRestart
 xnoremap <buffer> <silent> am <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@function.outer','textobjects','x')
 onoremap <buffer> <silent> am <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@function.outer','textobjects','o')
 xnoremap <buffer> <silent> a= <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@assignment.outer','textobjects','x')
 onoremap <buffer> <silent> a= <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@assignment.outer','textobjects','o')
-xnoremap <buffer> <silent> al <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@loop.outer','textobjects','x')
-onoremap <buffer> <silent> al <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@loop.outer','textobjects','o')
 xnoremap <buffer> <silent> ai <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@conditional.outer','textobjects','x')
 onoremap <buffer> <silent> ai <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@conditional.outer','textobjects','o')
+xnoremap <buffer> <silent> al <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@loop.outer','textobjects','x')
+onoremap <buffer> <silent> al <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@loop.outer','textobjects','o')
 nnoremap <buffer> <silent> gt <Cmd>Telescope lsp_type_definitions
 nnoremap <buffer> <silent> gi <Cmd>Telescope lsp_implementations
 nnoremap <buffer> <silent> gd <Cmd>Telescope lsp_definitions
 nnoremap <buffer> <silent> gR <Cmd>Telescope lsp_references
 xnoremap <buffer> <silent> ia <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@parameter.inner','textobjects','x')
 onoremap <buffer> <silent> ia <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@parameter.inner','textobjects','o')
-xnoremap <buffer> <silent> im <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@function.inner','textobjects','x')
-onoremap <buffer> <silent> im <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@function.inner','textobjects','o')
 xnoremap <buffer> <silent> ii <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@conditional.inner','textobjects','x')
 onoremap <buffer> <silent> ii <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@conditional.inner','textobjects','o')
+xnoremap <buffer> <silent> im <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@function.inner','textobjects','x')
+onoremap <buffer> <silent> im <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@function.inner','textobjects','o')
 xnoremap <buffer> <silent> i= <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@assignment.inner','textobjects','x')
 onoremap <buffer> <silent> i= <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@assignment.inner','textobjects','o')
 xnoremap <buffer> <silent> il <Cmd>lua require'nvim-treesitter.textobjects.select'.select_textobject('@loop.inner','textobjects','x')
@@ -151,7 +154,7 @@ setlocal spellfile=
 setlocal spelllang=en
 setlocal spelloptions=noplainbuffer
 setlocal statuscolumn=
-setlocal statusline=%#lualine_a_normal#\ NORMAL\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_b_normal#\ \ main\ %#lualine_transitional_lualine_b_normal_to_lualine_c_normal#%<%#lualine_c_normal#\ check.sh\ %#lualine_c_normal#%=%#lualine_c_normal#\ [$]\ %#lualine_transitional_lualine_b_normal_to_lualine_c_normal#%#lualine_b_normal#\ \ 8%%\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_a_normal#\ \ 13:19\ 
+setlocal statusline=%#lualine_a_normal#\ NORMAL\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_b_normal#\ \ main\ %#lualine_b_diff_added_normal#\ +90\ %#lualine_b_diff_modified_normal#~25\ %#lualine_b_diff_removed_normal#-21\ %#lualine_transitional_lualine_b_diff_removed_normal_to_lualine_c_normal#%<%#lualine_c_normal#\ check.sh\ %#lualine_c_normal#%=%#lualine_c_normal#\ [$]\ %#lualine_transitional_lualine_b_normal_to_lualine_c_normal#%#lualine_b_normal#\ 71%%\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_a_normal#\ 156:80\ 
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000

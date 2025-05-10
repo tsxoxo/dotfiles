@@ -9,4 +9,5 @@ nvim:/Users/me/.config/nvim
 git:/Users/me/.gitconfig
 karabiner:/Users/me/.config/karabiner/karabiner.json
 wezterm:/Users/me/.config/wezterm
-
+hammerspoon:/Users/me/.hammerspoon
+tmux:/Users/me/.tmux.conf

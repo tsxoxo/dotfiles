@@ -5,9 +5,12 @@
 # Do all entries map to a dir?
 # Are all entries valid?
 
+###############################################################################
 # SETUP
-set -u
+###############################################################################
+HAD_ERR=0
 WRONG_ARGS=85
+VERBOSE=""
 # For testing
 # ENTRIES="./test_entries.conf"
 ENTRIES="./entries.db"
@@ -20,99 +23,156 @@ BOLD='\033[1m'
 RESET='\033[0m' # No Styles
 
 usage() {
-  # echo "> ./setup.sh <FILEPATH> <DIRNAME>"
-  # echo "FILE will live under dotfiles/DIRNAME/some-config-file and be symlinked to FILEPATH."
-  echo "Util for checking integrity of dotfiles."
-  echo "USAGE: $0"
+  echo -e "
+${BOLD}USAGE:${RESET}\t$0 [ -f entries_file ] [ -v ]
+
+\tOptions:
+\t-f: specify entries database file (default: $ENTRIES)
+\t-v: enable verbose output"
 }
 log_err() {
-  echo -e "${RED}${BOLD}ERROR:\t${RED}$1${RESET}" >&2
+  HAD_ERR=1
+  verbose_override=$2
+  [[ -z "$VERBOSE" && -z $verbose_override ]] && return
+  echo -e "${RED}${BOLD}ERROR${RESET}\t$1" >&2
 }
 log_warn() {
-  echo -e "${YELLOW}${BOLD}WARN:\t${YELLOW}$1${RESET}"
+  [[ -z "$VERBOSE" ]] && return
+  echo -e "${YELLOW}${BOLD}WARN${RESET}\t$1"
 }
 log_ok() {
-  echo -e "${GREEN}${BOLD}OK:\t${GREEN}$1${RESET}"
+  [[ -z "$VERBOSE" ]] && return
+  echo -e "${GREEN}${BOLD}OK${RESET}\t$1"
 }
 log() {
+  [[ -z "$VERBOSE" ]] && return
   msg="${1-'no message in log()'}"
-  indent_level="${2-0}"
-  indent=""
-
-  for ((i = 1; i <= "$indent_level"; i++)); do
-    indent="${indent}---"
-  done
-
-  echo -e "${indent}> ${msg}"
+  echo -e "> ${msg}"
 }
 separate() {
-  echo -e "--------------------------"
+  [[ -z "$VERBOSE" ]] && return
+  echo -e "-------------------------------------------------------------------"
 }
 
-if [[ $# -gt 0 ]]; then
-  echo "Unexpected argument."
-  usage
-  exit $WRONG_ARGS
-fi
+###############################################################################
+# MAIN
+###############################################################################
+# parse args
+while [[ -n "$1" ]]; do
+  case "$1" in
+  -f)
+    shift
+    if [[ -z "$1" ]]; then
+      log_err "-f option expects path to entries db." force
+      usage
+      exit $WRONG_ARGS
+    fi
+    ENTRIES="$1"
+    ;;
+  "-v")
+    VERBOSE=verbose
+    ;;
+  *)
+    log_err "Unexpected argument."
+    usage
+    exit $WRONG_ARGS
+    ;;
+  esac
+  shift
+done
 
-# Does each dir map to an entry?
 for dotfile_dir in ./*; do
-  # Skip dirs
+  # Skip anything that's not a dir
   [[ ! -d "$dotfile_dir" ]] && continue
+
+  [[ -n "$VERBOSE" ]] && separate
 
   dirname=${dotfile_dir#*/}
   log "Checking dir ${BOLD}$dirname${RESET}"
 
-  # Search for dirname in entries, skipping comments.
-  # Desired state: one unique entry.
-  entries_in_db=$(grep -v "^#" "${ENTRIES}" | grep -i "${dirname}")
+  # Special case: keyboard layouts
+  # No DB entry for that.
+  # Just check if system dir has identical entry
+  if [[ "$dirname" == keyboard ]]; then
+    layouts_path="$HOME/Library/Keyboard Layouts"
+    for l in "$dotfile_dir"/*; do
+      layout=${l##*/}
+      if [[ ! -f "$layouts_path/$layout" ]]; then
+        log_err "Layout \"${layout%.*}\" not found in system dir:\n\t$layouts_path."
+      fi
 
-  # Fail: empty match.
-  # Discard this before counting, as wc counts "" as 1 line.
-  if [[ -z "$entries_in_db" ]]; then
-    log_err "Found no entry."
-    separate
+      if ! cmp --quiet "$l" "$layouts_path/$layout"; then
+        log_err "Layout \"${layout%.*}\" differs from file in system dir:\n\t$layouts_path."
+      fi
+
+      log_ok "Layout \"${layout%.*}\" found in system dir."
+    done
+
     continue
-  else
-    num_of_entries=$(echo "${entries_in_db}" | wc -l)
-    trimmed_num_of_entries=${num_of_entries#"${num_of_entries%%[![:space:]]}"}
   fi
 
-  # Fail: More than 1 match
-  if [[ "$trimmed_num_of_entries" -ne 1 ]]; then
-    log_err "Found more than 1 entry (${trimmed_num_of_entries}):\n${entries_in_db}"
-    separate
+  # Special case: macports
+  # No DB entry here.
+  # Do a simple check to see if our entry is up-to-date
+  if [[ "$dirname" == macports ]]; then
+    if ! command -v port &>/dev/null; then
+      log_err "Macports not installed."
+    fi
+
+    if ! cmp --quiet ./macports/requested_packages.txt <(port echo requested); then
+      log_err "Stored package list differs from 'port echo requested'"
+    fi
+
+    log_ok "Stored package list seems up to date."
+
+    continue
+  fi
+
+  # Does dir map to an entry?
+  # Search for dirname in entries, skipping comments.
+  # Desired state: one unique entry.
+  # First, count the lines.
+  # (Rationale for grepping multiple times -- once for counting, once for fetching result:
+  # using wc -l was hacky and brittle)
+  num_entries_in_db=$(grep -v "^#" "${ENTRIES}" | grep -c -- "${dirname}")
+
+  # Discard undesired: empty match or more than 1.
+  if [[ "$num_entries_in_db" -eq 0 ]]; then
+    log_err "Found no entry."
+    continue
+  elif [[ "$num_entries_in_db" -gt 1 ]]; then
+    log_err "Found ${num_entries_in_db} entries (expected 1):\n$(grep -v "^#" "${ENTRIES}" | grep -- "${dirname}" | sed 's/^/\t\t/')"
     continue
   fi
 
   # OK: 1 match.
+  entry=$(grep -v "^#" "${ENTRIES}" | grep "${dirname}")
   log_ok "Found unique entry."
 
   # Parse the entry for this dotfile dir
-  IFS=":" read -r id backlink <<<"$entries_in_db"
+  IFS=":" read -r id backlink <<<"$entry"
 
   # Check if entry is well-formatted
-  [[ "$id" != "$dirname" ]] && log_err "Dir name in DB \"${id}\" does not match existing dir name."
+  [[ "$id" != "$dirname" ]] && log_err "Dir name in DB does not match:\n\t\t${id}"
 
   # Check health of backlink. It should:
   # * it should exist
   target=$(readlink -f "${backlink}") || {
-    log_err "Something is wrong with this backlink:\n\t${backlink}\n\tCheck if it exists and is a link."
-    separate
+    log_err "Something is wrong with this backlink:\n\t\t${backlink}\n\tCheck if it exists and is a link."
     continue
   }
 
   # * if backlink is a dir, it should point to dotfile_dir
   if [[ -d "$backlink" ]]; then
-    dotfile_dir_abs=$(readlink -f "${dotfile_dir}")
-    if [[ "${target}" == "${dotfile_dir_abs}" ]]; then
+    # Get absolute path.
+    expected_target=$(readlink -f "${dotfile_dir}")
+    if [[ "${target}" == "${expected_target}" ]]; then
       log_ok "Backlink points to right dotfile dir."
     else
       # echo -e "file:\t${dotfile_dir}"
       # echo -e "target:\t${target}"
       # echo -e "file_abs:\t${dotfile_dir_abs}"
       log_err "Backlink points to wrong target: ${target}."
-      separate
       continue
     fi
   elif [[ -f "$backlink" ]]; then
@@ -122,7 +182,6 @@ for dotfile_dir in ./*; do
       log_ok "Backlink points to right dotfile."
     else
       log_err "Backlink points to wrong target: ${target}."
-      separate
       continue
     fi
 
@@ -143,7 +202,17 @@ for dotfile_dir in ./*; do
     shopt -u dotglob
   fi
 
-  separate
 done
+
+[[ -n "$VERBOSE" ]] && separate
+
+# Something bad happened along the way
+if [[ $HAD_ERR -ne 0 && -z $VERBOSE ]]; then
+  log_err "Something went wrong. Run \"$0 -v\" to see errors." force
+  exit 90
+fi
+
+exit 0
+
 # Do all entries map to a dir?
 # Are all entries valid?

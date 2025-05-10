@@ -1,0 +1,21 @@
+# Dotfiles configuration
+# Format: ID:SOURCE_PATH
+# Source can be both file or dir.
+# File will live under dotfiles/ID/file
+# Dir will live under dotfiles/ID
+
+# err: bad path
+zsh:/Users/me/.zshrcskk
+# err: duplicate
+nvim:/Users/me/.config/nvim
+nvim:/Users/me/.config/nvim
+# err: bad id 1
+dgit:/Users/me/.gitconfig
+# err: bad id 2
+KARABINER:/Users/me/.config/karabiner/karabiner.json
+# err: bad id 3
+:/Users/me/.config/wezterm
+# err: bad data format
+hammerspoon|/Users/me/.hammerspoon
+# ok
+tmux:/Users/me/.tmux.conf
