@@ -11,11 +11,10 @@
 HAD_ERR=0
 WRONG_ARGS=85
 VERBOSE=""
-# For testing
-# ENTRIES="./test_entries.conf"
 ENTRIES="./entries.db"
 # \033 is equivalent to \e but more portable
 # the "0;" resets all previous styles
+BLUE='\033[0;34m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 RED='\033[0;31m'
@@ -29,6 +28,12 @@ ${BOLD}USAGE:${RESET}\t$0 [ -f entries_file ] [ -v ]
 \tOptions:
 \t-f: specify entries database file (default: $ENTRIES)
 \t-v: enable verbose output"
+}
+
+log() {
+  [[ -z "$VERBOSE" ]] && return
+  echo -e "${BLUE}${1}${RESET}"
+
 }
 log_err() {
   HAD_ERR=1
@@ -44,14 +49,15 @@ log_ok() {
   [[ -z "$VERBOSE" ]] && return
   echo -e "${GREEN}${BOLD}OK${RESET}\t$1"
 }
-log() {
-  [[ -z "$VERBOSE" ]] && return
-  msg="${1-'no message in log()'}"
-  echo -e "> ${msg}"
-}
 separate() {
   [[ -z "$VERBOSE" ]] && return
-  echo -e "-------------------------------------------------------------------"
+  char="${1--}"
+  reps="${2-65}"
+  printf -v line "%*s" "$reps" ""
+  # Replace all spaces in 'line' with the desired character
+  # This is Bash-specific string manipulation: ${variable//pattern/replacement}
+  line="${line// /${char}}"
+  echo -e "$line"
 }
 
 ###############################################################################
@@ -67,6 +73,12 @@ while [[ -n "$1" ]]; do
       usage
       exit $WRONG_ARGS
     fi
+    if [[ ! -r "$1" ]]; then
+      log_err "Could not read $1" force
+      usage
+      exit $WRONG_ARGS
+    fi
+
     ENTRIES="$1"
     ;;
   "-v")
@@ -81,14 +93,19 @@ while [[ -n "$1" ]]; do
   shift
 done
 
+[[ -n "$VERBOSE" ]] && log "${BOLD}>>> CHECK: dirs${RESET}" && separate "-" 26
+
+dir_count=0
 for dotfile_dir in ./*; do
   # Skip anything that's not a dir
   [[ ! -d "$dotfile_dir" ]] && continue
 
-  [[ -n "$VERBOSE" ]] && separate
+  # Print separators
+  ((dir_count++))
+  [[ -n "$VERBOSE" && $dir_count -gt 1 ]]
 
   dirname=${dotfile_dir#*/}
-  log "Checking dir ${BOLD}$dirname${RESET}"
+  log "${BOLD}> ${dir_count} $dirname${RESET}"
 
   # Special case: keyboard layouts
   # No DB entry for that.
@@ -204,7 +221,22 @@ for dotfile_dir in ./*; do
 
 done
 
-[[ -n "$VERBOSE" ]] && separate
+echo
+
+# Do all entries map to a dir?
+[[ -n "$VERBOSE" ]] && log "${BOLD}>>> CHECK: entries${RESET}" && separate "-" 26
+
+while IFS=":" read -r dir_name link_path; do
+  if [[ ! -d ./"$dir_name" ]]; then
+    log_err "Did not find ./${dir_name}"
+  fi
+
+  log_ok "Entry '${BOLD}${dir_name}${RESET}' matches directory './${dir_name}'."
+done < <(grep "^[^#]" "$ENTRIES")
+
+###############################################################################
+# CLEANUP
+###############################################################################
 
 # Something bad happened along the way
 if [[ $HAD_ERR -ne 0 && -z $VERBOSE ]]; then
@@ -214,5 +246,14 @@ fi
 
 exit 0
 
-# Do all entries map to a dir?
-# Are all entries valid?
+# TODO: bash profiling, cmp vs diff
+#
+# TODO: stuff in neovim
+# * snippets:
+# * run different things based on buffer filetype or lsp recognition
+# * bash: for loop with files and basename
+# * bash: log variable
+# * keybind: swith vl= to v=l
+#
+# TODO: keys
+# tmux: simpler pane switch

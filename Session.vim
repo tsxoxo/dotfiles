@@ -21,13 +21,13 @@ badd +11 ~/dotfiles/dotfiles_duplicate.conf
 badd +27 ~/dotfiles/manage.sh
 badd +624 ~/dotfiles/_setup.sh
 badd +12 test_entries.conf
-badd +156 check.sh
+badd +215 check.sh
 badd +53 nvim/lua/tsxoxo/lazy/telescope.lua
 badd +1 oil:///Users/me/dotfiles/
 badd +13 entries.db
 badd +1 macports/requested_packages.txt
 badd +121 zsh/.zshrc
-badd +20 test_entries.db
+badd +14 test_entries.db
 argglobal
 %argdel
 $argadd oil:///Users/me/dotfiles/
@@ -154,7 +154,7 @@ setlocal spellfile=
 setlocal spelllang=en
 setlocal spelloptions=noplainbuffer
 setlocal statuscolumn=
-setlocal statusline=%#lualine_a_normal#\ NORMAL\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_b_normal#\ \ main\ %#lualine_b_diff_added_normal#\ +90\ %#lualine_b_diff_modified_normal#~25\ %#lualine_b_diff_removed_normal#-21\ %#lualine_transitional_lualine_b_diff_removed_normal_to_lualine_c_normal#%<%#lualine_c_normal#\ check.sh\ %#lualine_c_normal#%=%#lualine_c_normal#\ [$]\ %#lualine_transitional_lualine_b_normal_to_lualine_c_normal#%#lualine_b_normal#\ 71%%\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_a_normal#\ 156:80\ 
+setlocal statusline=%#lualine_a_normal#\ NORMAL\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_b_normal#\ \ main\ %#lualine_b_diff_added_normal#\ +21\ %#lualine_b_diff_modified_normal#~3\ %#lualine_b_normal#%#lualine_b_diagnostics_warn_normal#\ ����\ 2\ %#lualine_transitional_lualine_b_diagnostics_warn_normal_to_lualine_c_normal#%<%#lualine_c_normal#\ check.sh\ %#lualine_c_normal#%=%#lualine_c_normal#\ [$]\ %#lualine_transitional_lualine_b_normal_to_lualine_c_normal#%#lualine_b_normal#\ 89%%\ %#lualine_transitional_lualine_a_normal_to_lualine_b_normal#%#lualine_a_normal#\ 215:1\ \ 
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
