@@ -33,11 +33,13 @@ ${BOLD}USAGE:${RESET}\t$0 [ -f entries_file ] [ -v ]
 log() {
   [[ -z "$VERBOSE" ]] && return
   echo -e "${BLUE}${1}${RESET}"
-
 }
 log_err() {
+  # If this function got invoked, we got an error.
   HAD_ERR=1
+  # Override for logging summary errors even without -v option.
   verbose_override=$2
+
   [[ -z "$VERBOSE" && -z $verbose_override ]] && return
   echo -e "${RED}${BOLD}ERROR${RESET}\t$1" >&2
 }
@@ -63,6 +65,7 @@ separate() {
 ###############################################################################
 # MAIN
 ###############################################################################
+
 # parse args
 while [[ -n "$1" ]]; do
   case "$1" in
@@ -245,15 +248,3 @@ if [[ $HAD_ERR -ne 0 && -z $VERBOSE ]]; then
 fi
 
 exit 0
-
-# TODO: bash profiling, cmp vs diff
-#
-# TODO: stuff in neovim
-# * snippets:
-# * run different things based on buffer filetype or lsp recognition
-# * bash: for loop with files and basename
-# * bash: log variable
-# * keybind: swith vl= to v=l
-#
-# TODO: keys
-# tmux: simpler pane switch
