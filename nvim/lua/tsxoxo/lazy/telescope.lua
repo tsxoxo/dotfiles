@@ -31,53 +31,115 @@ return {
 				path_display = { "smart" },
 				mappings = {
 					n = {
+						-- attempt for a keybinding to delete a buffer.
 						-- this does not work universally,
 						-- e.g. if i am browsing my quickfix list it also attempts to delete a buffer
 						-- more useful would be 'delete item from list'
 						-- ["<c-d>"] = require("telescope.actions").delete_buffer,
+						["<C-y>"] = actions.cycle_history_next,
+						["<C-z>"] = actions.cycle_history_prev,
 					},
 					i = {
-						["<C-k>"] = actions.move_selection_previous, -- move to prev result
-						["<C-j>"] = actions.move_selection_next, -- move to next result
 						-- ["<C-q>"] = actions.send_selected_to_qflist + custom_actions.open_trouble_qflist,
 						-- smart == send all if no selection OR selection
 						-- ["<C-q>"] = actions.smart_send_to_qflist + custom_actions.open_trouble_qflist,
 						-- ["<C-t>"] = trouble_telescope.open,
 						["<C-h>"] = "which_key",
 						["<c-d>"] = require("telescope.actions").delete_buffer,
+						["<C-y>"] = actions.cycle_history_next,
+						["<C-z>"] = actions.cycle_history_prev,
 					},
 				},
 			},
 			pickers = {
 				find_files = {
-					hidden = true,
+					-- hidden = true,
+					-- can't be that simple as this breaks when running telescope from an oil/file explorer buffer
 					-- cwd = require("telescope.utils").buffer_dir(),
-					cwd = vim.fn.expand("%:p:h"),
+					-- cwd = vim.fn.expand("%:p:h"),
+
+					-- Display path
+					-- Option A
+					-- prompt_title = string.format("Find Files (%s)", vim.loop.cwd()),
+					-- Option B: Shorten path if too long
+					-- TODO: I would like to display the real CWD. Instead, this displays the cwd that is set at startup.
+					-- but we are changing the cwd at startup based on the oil buffer,
+					-- in order to make the cwd = foo when running 'nvim foo/'
+					-- prompt_title = string.format(
+					-- 	"Find Files (%s)",
+					-- 	require("telescope.utils").buffer_dir()
+					-- 	-- require("plenary.path"):new(vim.loop.cwd()):shorten()
+					-- ),
 				},
 				live_grep = {
-					cwd = require("telescope.utils").buffer_dir(),
+					-- cwd = require("telescope.utils").buffer_dir(),
+					-- prompt_title = string.format("Live grep (%s)", vim.loop.cwd()),
 					-- cwd = vim.fn.expand("%:p:h"),
 				},
 			},
 		})
 
-		telescope.load_extension("fzf")
-		telescope.load_extension("ui-select")
+		pcall(require("telescope").load_extension, "fzf")
+		pcall(require("telescope").load_extension, "ui-select")
 
-		-- set keymaps
-		local keymap = vim.keymap -- for conciseness
+		-- CUSTOM FUNCTIONS FOR PICKERS
+		-- Taken from recipes: https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes
+		---- UTILS
+		local function is_git_repo()
+			vim.fn.system("git rev-parse --is-inside-work-tree")
+			return vim.v.shell_error == 0
+		end
+		local function get_git_root()
+			local dot_git_path = vim.fn.finddir(".git", ".;")
+			return vim.fn.fnamemodify(dot_git_path, ":h")
+		end
+		---- FUNCS
+		local function live_grep_from_project_git_root()
+			local opts = {}
 
-		keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
-		keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
-		keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
-		keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
-		keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find todos" })
-		-- Alt syntax for fun
+			if is_git_repo() then
+				opts = {
+					cwd = get_git_root(),
+				}
+			end
+
+			require("telescope.builtin").live_grep(opts)
+		end
+		local function find_files_from_project_git_root()
+			local opts = {}
+			if is_git_repo() then
+				opts = {
+					cwd = get_git_root(),
+				}
+			end
+			require("telescope.builtin").find_files(opts)
+		end
+
+		-- KEYMAPS
 		local builtin = require("telescope.builtin")
-		keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
-		keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
-		keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Telescope git files" })
-		keymap.set("n", "<leader>fc", builtin.commands, { desc = "Telescope commands" })
-		keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Telescope keymaps" })
+		-- Files
+		vim.keymap.set("n", "<leader>ff", find_files_from_project_git_root, { desc = "[f]iles" })
+		vim.keymap.set(
+			"n",
+			"<leader>fi",
+			"<cmd>Telescope find_files hidden=true<cr>",
+			{ desc = "[i]nclude hidden files" }
+		)
+		-- vim.keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Telescope git files" })
+		vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "[r]ecent files" })
+		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "[b]uffers" })
+		-- Strings
+		vim.keymap.set("n", "<leader>fs", live_grep_from_project_git_root, { desc = "[s]tring" })
+		vim.keymap.set("n", "<leader>f*", "<cmd>Telescope grep_string<cr>", { desc = "string under cursor" })
+		-- Other entities
+		vim.keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "[t]odos" })
+		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
+		-- keymap.set("n", "<leader>fc", builtin.commands, { desc = "Telescope commands" })
+		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Telescope keymaps" })
+		-- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+		-- Dotfiles
+		vim.keymap.set("n", "<leader>fd", function()
+			builtin.find_files({ cwd = "/Users/me/dotfiles/" })
+		end, { desc = "[d]otfiles" })
 	end,
 }

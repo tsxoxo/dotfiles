@@ -107,7 +107,10 @@ fi
 # =============================================
 # Can make modules: see $ZSH_CUSTOM folder.
 
+alias mkdir="mkdir -pv"
+alias conf="nvim ~/dotfiles"
 alias zshconf="nvim ~/.zshrc"
+alias vconf="nvim ~/dotfiles/nvim"
 
 # Specific software
 open_with_chrome() {
@@ -232,6 +235,9 @@ function enable_vim() {
 
   zle -N vi_yank_pbcopy
   bindkey -M vicmd 'y' vi_yank_pbcopy
+
+  # bindkey -M vicmd 'k' vi-history-search-backward
+  # bindkey -M vicmd 'j' vi-history-search-forward
 }
 
 # DO IT

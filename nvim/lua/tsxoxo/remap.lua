@@ -25,7 +25,6 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 
 -- SAVING AND QUITTING
 vim.keymap.set({ "n", "v" }, "<leader>fw", vim.cmd.write, { desc = "Save file." })
--- vim.keymap.set({ 'n', 'v' }, '<leader><leader>wa', vim.cmd('wa'), { desc = 'Save all.' })
 
 vim.keymap.set({ "n", "v" }, "<leader>fq", "<cmd>qa<CR>", { desc = "Close all and quit (:qa)." })
 
@@ -33,15 +32,12 @@ vim.keymap.set({ "n", "v" }, "<leader>fo", "<cmd>Obsess<CR>", { desc = "Obsess (
 
 -- INTER-BUFFER
 vim.keymap.set("n", "<leader>fe", vim.cmd.Oil, { desc = "Open file explorer" })
--- vim.keymap.set('n', '<leader>ee', vim.cmd.Ex, { desc = "Open file explorer" })
 
 vim.keymap.set({ "n", "v" }, "<leader><leader>", "<cmd>b#<CR>", { desc = "Switch to last bugger." })
 
-vim.keymap.set("n", "<leader>fcd", function()
-	vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
-end, { desc = "Set CWD to open file" })
-
-vim.keymap.set("n", "<leader>fd", "<cmd>bd<CR>", { desc = "Delete current buffer" })
+-- vim.keymap.set("n", "<leader>fcd", function()
+-- 	vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
+-- end, { desc = "Set CWD to open file" })
 
 -- INTRA-BUFFER
 vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz", { desc = "Move down half a page while keeping cursor centered." })

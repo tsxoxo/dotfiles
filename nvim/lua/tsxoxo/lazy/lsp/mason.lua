@@ -31,6 +31,7 @@ return {
 				"volar",
 				"lua_ls",
 				"bashls",
+				"asm_lsp",
 			},
 		})
 
@@ -45,6 +46,7 @@ return {
 				"prettier",
 				"stylua",
 				"shfmt",
+				-- Extra LSPs
 			},
 		})
 	end,

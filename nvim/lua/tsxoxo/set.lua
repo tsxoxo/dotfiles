@@ -4,7 +4,7 @@
 vim.g.have_nerd_font = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
+vim.opt.mouse = "a"
 
 -- Enable break indent
 -- try this out
@@ -28,7 +28,7 @@ vim.opt.updatetime = 250
 -- }
 vim.opt.shortmess:append("aoOstTIcF")
 
-vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- BEHAVIOR
 --
@@ -50,7 +50,7 @@ vim.g.netrw_winsize = 25
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+	vim.opt.clipboard = "unnamedplus"
 end)
 
 -- Configure how new splits should be opened
@@ -90,7 +90,7 @@ vim.opt.signcolumn = "yes"
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- More colors? Not sure
 vim.opt.termguicolors = true
@@ -108,4 +108,3 @@ vim.opt.tabstop = 4
 
 -- Set indentation level to 4 spaces
 vim.opt.shiftwidth = 2
-
