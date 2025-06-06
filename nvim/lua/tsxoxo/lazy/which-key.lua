@@ -8,9 +8,11 @@ return {
 	opts = {
 		--@type false | "classic" | "modern" | "helix"
 		preset = "modern",
-		delay = 0,
+		delay = 1000,
 		spec = {
-			{ "<leader>f", group = "[F]ind" },
+			{ "<leader>s", group = "[S]earch" },
+			{ "<leader>f", group = "[F]ile" },
+			{ "<leader>q", group = "[Q]uickfix" },
 			-- From Kickstart
 			-- { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
 			-- { '<leader>d', group = '[D]ocument' },
@@ -19,6 +21,9 @@ return {
 			-- { '<leader>w', group = '[W]orkspace' },
 			-- { '<leader>t', group = '[T]oggle' },
 			-- { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+		},
+		win = {
+			no_overlap = false, -- allow overlap with cursor. Was confusing me with small windows otherwise.
 		},
 		icons = {
 			-- set icon mappings to true if you have a Nerd Font

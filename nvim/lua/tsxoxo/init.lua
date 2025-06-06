@@ -23,6 +23,38 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Formatting for asm
+-- thanks, Claude
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "asm",
+	callback = function()
+		vim.opt_local.expandtab = false
+		vim.opt_local.tabstop = 64
+		-- does not work well with >8
+		vim.opt_local.shiftwidth = 16
+		vim.opt_local.softtabstop = 0
+		-- Smart tab for assembly: indent to 16, then comments to 64
+		vim.keymap.set("i", "<Tab>", function()
+			local col = vim.fn.col(".")
+
+			if col <= 8 then
+				-- Indent subroutines: go to column 16
+				local spaces_needed = 8 - col
+				return string.rep(" ", spaces_needed + 1) -- +1 because col() is 1-based
+			else
+				-- TODO: do this with tabs
+				-- Comment alignment: go to column 64
+				local spaces_needed = 64 - col
+				if spaces_needed > 0 then
+					return string.rep(" ", spaces_needed + 1)
+				else
+					return " " -- Already past 64, just add a space
+				end
+			end
+		end, { expr = true, buffer = true, desc = "ASM smart tab: indent to 16, comments to 64" })
+	end,
+})
+
 -- cd into dir 'foo' when opening via 'nvim foo'
 vim.api.nvim_create_autocmd("TextChanged", {
 	desc = "Set cwd to follow directory shown in oil buffers.",
@@ -61,7 +93,8 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 vim.api.nvim_create_autocmd("BufReadPost", {
 	pattern = "*/APPS/*.asm",
 	callback = function()
-		vim.cmd("setfiletype fasm")
+		-- 'asm' works better than 'fasm': e.g. allows for comments
+		vim.cmd("setfiletype asm")
 	end,
 })
 

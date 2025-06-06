@@ -65,18 +65,21 @@ vim.keymap.set("v", "<leader>x", ":lua<CR>", { desc = "Execute selected region o
 
 -- Show colorcolumn
 -- TODO: Toggle this.
-vim.keymap.set({ "n", "v" }, "<leader>gq", "<cmd>set colorcolumn=80<CR>", { desc = "Show 80char column ruler." })
+vim.keymap.set({ "n", "v" }, "<leader>tq", "<cmd>set colorcolumn=80<CR>", { desc = "Show 80char column ruler." })
 -- vim.keymap.set({ 'n', 'v' }, '<leader>ww', vim.opt.colorcolumn = "79", { desc = 'Show 80char column ruler.' })
 
+-- Make search use very magic by default
+-- Because the default means I have to escape + but not *,
+-- which is confusing.
+vim.keymap.set("n", "/", "/\\v", { desc = "Search with very magic" })
+vim.keymap.set("n", "?", "?\\v", { desc = "Reverse search with very magic" })
+
 -- Quickfix
--- vim.keymap.set("n", "]q", "<cmd>Trouble quickfix next focus=false<CR>", { desc = "next quickfix item" })
--- vim.keymap.set("n", "]q", function()
--- 	require("trouble").next({ mode = "quickfix", jump = true, focus = false })
--- end, { silent = true, desc = "Next Trouble qf item (no focus change)" })
---
--- vim.keymap.set("n", "[q", "<cmd>Trouble quickfix prev focus=false<CR>", { desc = "previous quickfix item" })
--- vim.keymap.set("n", "]Q", "<cmd>Trouble quickfix last focus=false<CR>", { desc = "Last quickfix item" })
--- vim.keymap.set("n", "[Q", "<cmd>Trouble quickfix first focus=false<CR>", { desc = "First quickfix item" })
+-- Basics
+vim.keymap.set("n", "<leader>qo", ":copen<CR>", { desc = "Open quickfix" })
+vim.keymap.set("n", "<leader>qc", ":cclose<CR>", { desc = "Close quickfix" })
+vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Next quickfix" })
+vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Prev quickfix" })
 
 vim.keymap.set("n", "<leader>qf", "<cmd>Telescope quickfix<CR>", { desc = "Browse quickfix" })
 vim.keymap.set("n", "<leader>qs", function()
@@ -84,3 +87,23 @@ vim.keymap.set("n", "<leader>qs", function()
 	vim.cmd("grep! " .. vim.fn.expand("<cword>"))
 	vim.cmd("copen")
 end, { desc = "Search word to quickfix" })
+
+--------------
+-- Snippets --
+--------------
+-- Generate this sort of line:
+-- ############################################################
+-- Used to separate code sections
+vim.keymap.set("n", "<leader>gb", "60i#<Esc>", { desc = "#####" })
+
+-- console.log macro for JS/TS
+vim.api.nvim_create_augroup("js", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = "js",
+	pattern = { "javascript", "typescript", "vue" },
+	callback = function()
+		local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
+		vim.fn.setreg("l", "yoconsole.log('" .. esc .. "pa: ', " .. esc .. "pa)" .. esc)
+	end,
+})

@@ -89,10 +89,32 @@ return {
 			vim.fn.system("git rev-parse --is-inside-work-tree")
 			return vim.v.shell_error == 0
 		end
+
 		local function get_git_root()
 			local dot_git_path = vim.fn.finddir(".git", ".;")
 			return vim.fn.fnamemodify(dot_git_path, ":h")
 		end
+
+		local function get_cwd_with_fallback()
+			local result = ""
+			if is_git_repo() then
+				result = get_git_root()
+				-- return get_git_root()
+			else
+				result = vim.fn.expand("%:p:h")
+				-- return vim.fn.expand("%:p:h")
+			end
+			-- DEBUG
+			-- print(result)
+			return result
+		end
+
+		local function find_todos_in_project()
+			-- Also possible:
+			-- require('telescope').extensions['todo-comments'].todo({cwd="~/dotfiles"})
+			vim.cmd("TodoTelescope cwd=" .. get_cwd_with_fallback())
+		end
+
 		---- FUNCS
 		local function live_grep_from_project_git_root()
 			local opts = {}
@@ -115,30 +137,38 @@ return {
 			require("telescope.builtin").find_files(opts)
 		end
 
+		local function find_hidden_files_from_project_git_root()
+			local opts = {}
+			if is_git_repo() then
+				opts = {
+					cwd = get_git_root(),
+				}
+			end
+			opts = {
+				find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+			}
+			require("telescope.builtin").find_files(opts)
+		end
+
 		-- KEYMAPS
 		local builtin = require("telescope.builtin")
 		-- Files
-		vim.keymap.set("n", "<leader>ff", find_files_from_project_git_root, { desc = "[f]iles" })
-		vim.keymap.set(
-			"n",
-			"<leader>fi",
-			"<cmd>Telescope find_files hidden=true<cr>",
-			{ desc = "[i]nclude hidden files" }
-		)
-		-- vim.keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Telescope git files" })
-		vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "[r]ecent files" })
-		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "[b]uffers" })
+		vim.keymap.set("n", "<leader>sf", find_files_from_project_git_root, { desc = "[f]iles" })
+		vim.keymap.set("n", "<leader>si", find_hidden_files_from_project_git_root, { desc = "[i]nclude hidden files" })
+		-- vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "Telescope git files" })
+		vim.keymap.set("n", "<leader>sr", "<cmd>Telescope oldfiles<cr>", { desc = "[r]ecent files" })
+		vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "[b]uffers" })
 		-- Strings
-		vim.keymap.set("n", "<leader>fs", live_grep_from_project_git_root, { desc = "[s]tring" })
-		vim.keymap.set("n", "<leader>f*", "<cmd>Telescope grep_string<cr>", { desc = "string under cursor" })
+		vim.keymap.set("n", "<leader>ss", live_grep_from_project_git_root, { desc = "[s]tring" })
+		vim.keymap.set("n", "<leader>s*", "<cmd>Telescope grep_string<cr>", { desc = "string under cursor" })
 		-- Other entities
-		vim.keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "[t]odos" })
-		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
-		-- keymap.set("n", "<leader>fc", builtin.commands, { desc = "Telescope commands" })
-		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Telescope keymaps" })
+		vim.keymap.set("n", "<leader>st", find_todos_in_project, { desc = "[t]odos" })
+		vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Telescope help tags" })
+		-- keymap.set("n", "<leader>sc", builtin.commands, { desc = "Telescope commands" })
+		vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Telescope keymaps" })
 		-- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 		-- Dotfiles
-		vim.keymap.set("n", "<leader>fd", function()
+		vim.keymap.set("n", "<leader>sd", function()
 			builtin.find_files({ cwd = "/Users/me/dotfiles/" })
 		end, { desc = "[d]otfiles" })
 	end,

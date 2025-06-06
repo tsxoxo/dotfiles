@@ -111,6 +111,8 @@ alias mkdir="mkdir -pv"
 alias conf="nvim ~/dotfiles"
 alias zshconf="nvim ~/.zshrc"
 alias vconf="nvim ~/dotfiles/nvim"
+alias vimconf="nvim ~/dotfiles/nvim"
+alias tmuxconf="nvim ~/dotfiles/tmux/.tmux.conf"
 
 # Specific software
 open_with_chrome() {
@@ -168,6 +170,8 @@ export PATH="/opt/local/bin:$PATH"
 export PATH="$HOME/dev/utils:$PATH"
 # Add Cheatsheets.
 export PATH="$PATH:$HOME/dev/bash/cheatsheets"
+# Add FASM
+export PATH="$PATH:$HOME/dev/asm/fasm/source/macos/x64"
 
 # =============================================
 # VIM MODE

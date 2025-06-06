@@ -128,17 +128,17 @@ return {
 					["[L"] = { query = "@loop.outer", desc = "Prev loop end" },
 				},
 			},
-			swap = {
-				enable = true,
-				swap_next = {
-					["<leader>spn"] = "@parameter.inner", -- swap parameters/argument with next
-					["<leader>sfn"] = "@function.outer", -- swap function with next
-				},
-				swap_previous = {
-					["<leader>spp"] = "@parameter.inner", -- swap parameters/argument with prev
-					["<leader>sfp"] = "@function.outer", -- swap function with previous
-				},
-			},
+			-- swap = {
+			-- 	enable = true,
+			-- 	swap_next = {
+			-- 		["<leader>spn"] = "@parameter.inner", -- swap parameters/argument with next
+			-- 		["<leader>sfn"] = "@function.outer", -- swap function with next
+			-- 	},
+			-- 	swap_previous = {
+			-- 		["<leader>spp"] = "@parameter.inner", -- swap parameters/argument with prev
+			-- 		["<leader>sfp"] = "@function.outer", -- swap function with previous
+			-- 	},
+			-- },
 		},
 		-- Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
 	},
