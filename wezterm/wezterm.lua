@@ -53,8 +53,8 @@ config.window_decorations = "RESIZE"
 
 -- Key bindings.
 config.keys = {
-	{ key = "u", mods = "ALT", action = wezterm.action.ScrollByPage(-0.5) },
-	{ key = "d", mods = "ALT", action = wezterm.action.ScrollByPage(0.5) },
+	{ key = "UpArrow", action = wezterm.action.ScrollByPage(-0.5) },
+	{ key = "DownArrow", action = wezterm.action.ScrollByPage(0.5) },
 }
 
 return config

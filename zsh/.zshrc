@@ -110,9 +110,11 @@ fi
 alias mkdir="mkdir -pv"
 alias conf="nvim ~/dotfiles"
 alias zshconf="nvim ~/.zshrc"
+alias zconf="nvim ~/.zshrc"
 alias vconf="nvim ~/dotfiles/nvim"
 alias vimconf="nvim ~/dotfiles/nvim"
 alias tmuxconf="nvim ~/dotfiles/tmux/.tmux.conf"
+alias wezconf="nvim ~/dotfiles/wezterm/wezterm.lua"
 
 # Specific software
 open_with_chrome() {
