@@ -25,14 +25,11 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 
 -- SAVING AND QUITTING
 vim.keymap.set({ "n", "v" }, "<leader>fw", vim.cmd.write, { desc = "Save file." })
-
 vim.keymap.set({ "n", "v" }, "<leader>fq", "<cmd>qa<CR>", { desc = "Close all and quit (:qa)." })
-
 vim.keymap.set({ "n", "v" }, "<leader>fo", "<cmd>Obsess<CR>", { desc = "Obsess (start vim session)" })
 
 -- INTER-BUFFER
 vim.keymap.set("n", "<leader>fe", vim.cmd.Oil, { desc = "Open file explorer" })
-
 vim.keymap.set({ "n", "v" }, "<leader><leader>", "<cmd>b#<CR>", { desc = "Switch to last bugger." })
 
 -- vim.keymap.set("n", "<leader>fcd", function()
@@ -54,9 +51,11 @@ vim.keymap.set("i", "jj", "<Esc>", { desc = "Leave insert mode" })
 -- see also trouble.lua
 -- vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
--- Delete without overwriting yank register
-vim.keymap.set({ "n", "x" }, "x", '"_x')
-vim.keymap.set({ "n", "x" }, "X", '"_d')
+-- Delete/change/paste without overwriting yank register
+vim.keymap.set({ "n", "x" }, "x", '"_x', { desc = "Delete char without yanking" })
+vim.keymap.set({ "n", "x" }, "X", '"_d', { desc = "Delete text without yanking" })
+vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "Change without yanking" })
+vim.keymap.set("x", "p", '"_dp', { desc = "Paste without yanking" })
 
 -- Execute code on the spot
 vim.keymap.set("n", "<leader>fx", "<cmd>source %<CR>", { desc = "Execute/source whole file." })
