@@ -55,7 +55,7 @@ vim.keymap.set("i", "jj", "<Esc>", { desc = "Leave insert mode" })
 vim.keymap.set({ "n", "x" }, "x", '"_x', { desc = "Delete char without yanking" })
 vim.keymap.set({ "n", "x" }, "X", '"_d', { desc = "Delete text without yanking" })
 vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "Change without yanking" })
-vim.keymap.set("x", "p", '"_dp', { desc = "Paste without yanking" })
+vim.keymap.set("x", "p", '"_dP', { desc = "Paste without yanking" })
 
 -- Execute code on the spot
 vim.keymap.set("n", "<leader>fx", "<cmd>source %<CR>", { desc = "Execute/source whole file." })
@@ -90,10 +90,10 @@ end, { desc = "Search word to quickfix" })
 --------------
 -- Snippets --
 --------------
--- Generate this sort of line:
--- ############################################################
--- Used to separate code sections
-vim.keymap.set("n", "<leader>gb", "60i#<Esc>", { desc = "#####" })
+-- Borders to separate code sections
+vim.keymap.set("n", "<leader>g#", "60i#<Esc>", { desc = "#####" })
+vim.keymap.set("n", "<leader>g=", "60i=<Esc>", { desc = "=====" })
+local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
 
 -- console.log macro for JS/TS
 vim.api.nvim_create_augroup("js", { clear = true })
@@ -102,7 +102,18 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = "js",
 	pattern = { "javascript", "typescript", "vue" },
 	callback = function()
-		local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
 		vim.fn.setreg("l", "yoconsole.log('" .. esc .. "pa: ', " .. esc .. "pa)" .. esc)
+	end,
+})
+
+-- Formatting macro for asm
+vim.api.nvim_create_augroup("asm", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = "asm",
+	pattern = { "asm" },
+	callback = function()
+		local tab = vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
+		vim.fn.setreg("f", "0f;i " .. esc .. "diw" .. "i" .. tab .. esc)
 	end,
 })

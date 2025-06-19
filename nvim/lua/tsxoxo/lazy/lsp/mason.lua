@@ -28,7 +28,7 @@ return {
 				"cssls",
 				"tailwindcss",
 				"ts_ls", -- TS support in Vue files.
-				"volar",
+				"vue_ls",
 				"lua_ls",
 				"bashls",
 				"asm_lsp",

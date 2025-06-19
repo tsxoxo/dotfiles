@@ -75,123 +75,125 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		mason_lspconfig.setup_handlers({
-			-- default handler for installed servers
-			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-				})
-			end,
-			["emmet_ls"] = function()
-				-- configure emmet language server
-				lspconfig["emmet_ls"].setup({
-					capabilities = capabilities,
-					filetypes = {
-						"html",
-						"typescriptreact",
-						"javascriptreact",
-						"css",
-						"sass",
-						"scss",
-						"less",
-						"svelte",
-					},
-				})
-			end,
-			["volar"] = function()
-				lspconfig["volar"].setup({
-					init_options = {
-						vue = {
-							hybridMode = false,
-						},
-					},
-					settings = {
-						typescript = {
-							inlayHints = {
-								enumMemberValues = {
-									enabled = true,
-								},
-								functionLikeReturnTypes = {
-									enabled = true,
-								},
-								propertyDeclarationTypes = {
-									enabled = true,
-								},
-								parameterTypes = {
-									enabled = true,
-									suppressWhenArgumentMatchesName = true,
-								},
-								variableTypes = {
-									enabled = true,
-								},
-							},
-						},
-					},
-				})
-			end,
-			["ts_ls"] = function()
-				lspconfig["ts_ls"].setup({
-					init_options = {
-						plugins = {
-							{
-								name = "@vue/typescript-plugin",
-								location = vim.fn.stdpath("data")
-									.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
-								languages = { "vue" },
-							},
-						},
-					},
-					filetypes = {
-						"javascript",
-						"typescript",
-						"vue",
-					},
-					settings = {
-						typescript = {
-							tsserver = {
-								useSyntaxServer = false,
-							},
-							inlayHints = {
-								includeInlayParameterNameHints = "all",
-								includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-								includeInlayFunctionParameterTypeHints = true,
-								includeInlayVariableTypeHints = true,
-								includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-								includeInlayPropertyDeclarationTypeHints = true,
-								includeInlayFunctionLikeReturnTypeHints = true,
-								includeInlayEnumMemberValueHints = true,
-							},
-						},
-					},
-				})
-			end,
+		mason_lspconfig.setup({
+			handlers = {
+				-- default handler
+				function(server_name)
+					lspconfig[server_name].setup({
+						capabilities = capabilities,
+					})
+				end,
 
-			["lua_ls"] = function()
-				-- configure lua server (with special settings)
-				lspconfig["lua_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						Lua = {
-							-- make the language server recognize "vim" global
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completion = {
-								callSnippet = "Replace",
+				["emmet_ls"] = function()
+					lspconfig["emmet_ls"].setup({
+						capabilities = capabilities,
+						filetypes = {
+							"html",
+							"typescriptreact",
+							"javascriptreact",
+							"css",
+							"sass",
+							"scss",
+							"less",
+							"svelte",
+						},
+					})
+				end,
+				["vue_ls"] = function()
+					lspconfig["vue_ls"].setup({
+						init_options = {
+							vue = {
+								hybridMode = false,
 							},
 						},
-					},
-				})
-			end,
+						settings = {
+							typescript = {
+								inlayHints = {
+									enumMemberValues = {
+										enabled = true,
+									},
+									functionLikeReturnTypes = {
+										enabled = true,
+									},
+									propertyDeclarationTypes = {
+										enabled = true,
+									},
+									parameterTypes = {
+										enabled = true,
+										suppressWhenArgumentMatchesName = true,
+									},
+									variableTypes = {
+										enabled = true,
+									},
+								},
+							},
+						},
+					})
+				end,
+				["ts_ls"] = function()
+					lspconfig["ts_ls"].setup({
+						-- init_options = {
+						-- 	plugins = {
+						-- 		{
+						-- 			name = "@vue/typescript-plugin",
+						-- 			location = vim.fn.stdpath("data")
+						-- 				.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+						-- 			languages = { "vue" },
+						-- 		},
+						-- 	},
+						-- },
+						filetypes = {
+							"javascript",
+							"typescript",
+							-- "vue",
+						},
+						settings = {
+							typescript = {
+								tsserver = {
+									useSyntaxServer = false,
+								},
+								inlayHints = {
+									includeInlayParameterNameHints = "all",
+									includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+									includeInlayFunctionParameterTypeHints = true,
+									includeInlayVariableTypeHints = true,
+									includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+									includeInlayPropertyDeclarationTypeHints = true,
+									includeInlayFunctionLikeReturnTypeHints = true,
+									includeInlayEnumMemberValueHints = true,
+								},
+							},
+						},
+					})
+				end,
 
-			-- ["asm_lsp"] = function()
-			-- 	lspconfig["asm_lsp"].setup({
-			-- 		-- command = "asm-lsp",
-			-- 		filetypes = {
-			-- 			"asm",
-			-- 		},
-			-- 	})
-			-- end,
+				["lua_ls"] = function()
+					-- configure lua server (with special settings)
+					lspconfig["lua_ls"].setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								-- make the language server recognize "vim" global
+								diagnostics = {
+									globals = { "vim" },
+								},
+								completion = {
+									callSnippet = "Replace",
+								},
+							},
+						},
+					})
+				end,
+
+				-- ["asm_lsp"] = function()
+				-- 	lspconfig["asm_lsp"].setup({
+				-- 		-- command = "asm-lsp",
+				-- 		filetypes = {
+				-- 			"asm",
+				-- 		},
+				-- 	})
+				-- end,
+			},
 		})
 	end,
 }
