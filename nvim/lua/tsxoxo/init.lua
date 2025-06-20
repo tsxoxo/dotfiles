@@ -2,6 +2,17 @@ require("tsxoxo/set")
 require("tsxoxo/remap")
 require("tsxoxo/lazy_init")
 
+---------
+-- LSP --
+---------
+vim.lsp.enable({
+	-- "cssls",
+	-- "emmet_ls",
+	-- "ts_ls",
+	"vue_ls",
+	"vtsls",
+})
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -90,27 +101,27 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- .asm files in /fasm are fasm
-vim.api.nvim_create_autocmd("BufReadPost", {
-	pattern = "*/APPS/*.asm",
-	callback = function()
-		-- 'asm' works better than 'fasm': e.g. allows for comments
-		vim.cmd("setfiletype asm")
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufReadPost", {
+-- 	pattern = "*/APPS/*.asm",
+-- 	callback = function()
+-- 		-- 'asm' works better than 'fasm': e.g. allows for comments
+-- 		vim.cmd("setfiletype asm")
+-- 	end,
+-- })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
-	pattern = vim.fn.stdpath("config") .. "/lua/tsxoxo/lazy/*.lua",
-	callback = function()
-		vim.cmd("silent! Lazy sync")
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+-- 	pattern = vim.fn.stdpath("config") .. "/lua/tsxoxo/lazy/*.lua",
+-- 	callback = function()
+-- 		vim.cmd("silent! Lazy sync")
+-- 	end,
+-- })
 
 -- DEBUG
 -- Parts of my config like keybinds and certain behaviors
 -- get unloaded after a while after starting nvim.
-vim.api.nvim_create_autocmd("User", {
-	pattern = "LazyLoad",
-	callback = function(args)
-		vim.notify("Lazy loaded: " .. vim.inspect(args.data), vim.log.levels.INFO)
-	end,
-})
+-- vim.api.nvim_create_autocmd("User", {
+-- 	pattern = "LazyLoad",
+-- 	callback = function(args)
+-- 		vim.notify("Lazy loaded: " .. vim.inspect(args.data), vim.log.levels.INFO)
+-- 	end,
+-- })
