@@ -1,17 +1,7 @@
 require("tsxoxo/set")
 require("tsxoxo/remap")
 require("tsxoxo/lazy_init")
-
----------
--- LSP --
----------
-vim.lsp.enable({
-	-- "cssls",
-	-- "emmet_ls",
-	-- "ts_ls",
-	"vue_ls",
-	"vtsls",
-})
+require("tsxoxo/lsp-setup")
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`

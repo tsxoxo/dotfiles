@@ -1,11 +1,15 @@
 ---@brief
 ---
 -- https://github.com/vuejs/language-tools/wiki/Neovim
+--
+-- The setup for vue_ls and vtsls is copied verbatim from:
+-- https://github.com/bearguns/vue_ls_v3_nvim/tree/main
+-- as found in the following thread from Discord server Vueland:
+-- https://discord.com/channels/325477692906536972/1382376021264830494
 
 return {
 	cmd = { "vue-language-server", "--stdio" },
 	filetypes = { "vue" },
-	root_markers = { "package.json" },
 	on_init = function(client)
 		client.handlers["tsserver/request"] = function(_, result, context)
 			local clients = vim.lsp.get_clients({ bufnr = context.bufnr, name = "vtsls" })

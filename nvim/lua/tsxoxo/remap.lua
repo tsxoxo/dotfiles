@@ -1,71 +1,14 @@
 --  See `:help vim.keymap.set()`
 
 vim.g.mapleader = " "
--- Not sure what the difference is.
 vim.g.maplocalleader = " "
 
--- TODO:
--- 2025-04-24
---* group bindings
--- [ ] jump to next/previous
---* copy telescope bindings from kickstart
-
--- SYSTEM
+------------
+-- SYSTEM --
+------------
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
--- SAVING AND QUITTING
-vim.keymap.set({ "n", "v" }, "<leader>fw", vim.cmd.write, { desc = "Save file." })
-vim.keymap.set({ "n", "v" }, "<leader>fq", "<cmd>qa<CR>", { desc = "Close all and quit (:qa)." })
-vim.keymap.set({ "n", "v" }, "<leader>fo", "<cmd>Obsess<CR>", { desc = "Obsess (start vim session)" })
-
--- INTER-BUFFER
-vim.keymap.set("n", "<leader>fe", vim.cmd.Oil, { desc = "Open file explorer" })
-vim.keymap.set({ "n", "v" }, "<leader><leader>", "<cmd>b#<CR>", { desc = "Switch to last bugger." })
-
--- vim.keymap.set("n", "<leader>fcd", function()
--- 	vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
--- end, { desc = "Set CWD to open file" })
-
--- INTRA-BUFFER
-vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz", { desc = "Move down half a page while keeping cursor centered." })
-vim.keymap.set({ "n", "v" }, "<C-u>", "<C-u>zz", { desc = "Move up half a page while keeping cursor centered." })
-vim.keymap.set("i", "jj", "<Esc>", { desc = "Leave insert mode" })
-
--- vim movement
--- vim.keymap.set({ "n", "v" }, "<C-y>", "_", { desc = "to start of line" })
--- vim.keymap.set({ "n", "v" }, "<C-o>", "$", { desc = "to end of line" })
--- vim.keymap.set({ "n", "v" }, "<C-i>", "<C-u>zz", { desc = "to start of file" })
--- vim.keymap.set({ "n", "v" }, "<C-u>", "<C-u>zz", { desc = "to end of file" })
-
--- Diagnostics
--- see also trouble.lua
--- vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
-
--- Delete/change/paste without overwriting yank register
-vim.keymap.set({ "n", "x" }, "x", '"_x', { desc = "Delete char without yanking" })
-vim.keymap.set({ "n", "x" }, "X", '"_d', { desc = "Delete text without yanking" })
-vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "Change without yanking" })
-vim.keymap.set("x", "p", '"_dP', { desc = "Paste without yanking" })
-
--- Execute code on the spot
-vim.keymap.set("n", "<leader>fx", "<cmd>source %<CR>", { desc = "Execute/source whole file." })
-vim.keymap.set("n", "<leader>x", ":.lua<CR>", { desc = "Execute line of Lua." })
-vim.keymap.set("v", "<leader>x", ":lua<CR>", { desc = "Execute selected region of Lua." })
-
--- Show colorcolumn
--- TODO: Toggle this.
-vim.keymap.set({ "n", "v" }, "<leader>tq", "<cmd>set colorcolumn=80<CR>", { desc = "Show 80char column ruler." })
--- vim.keymap.set({ 'n', 'v' }, '<leader>ww', vim.opt.colorcolumn = "79", { desc = 'Show 80char column ruler.' })
 
 -- Make search use very magic by default
 -- Because the default means I have to escape + but not *,
@@ -73,16 +16,91 @@ vim.keymap.set({ "n", "v" }, "<leader>tq", "<cmd>set colorcolumn=80<CR>", { desc
 vim.keymap.set("n", "/", "/\\v", { desc = "Search with very magic" })
 vim.keymap.set("n", "?", "?\\v", { desc = "Reverse search with very magic" })
 
--- Quickfix
--- Basics
+------------
+-- [F]ile --
+------------
+vim.keymap.set({ "n", "v" }, "<leader>fw", vim.cmd.write, { desc = "Save file." })
+vim.keymap.set({ "n", "v" }, "<leader>fq", "<cmd>qa<CR>", { desc = "Close all and quit (:qa)." })
+
+vim.keymap.set("n", "<leader>fe", vim.cmd.Oil, { desc = "Open file explorer" })
+
+-----------------------------
+-- INTER-BUFFER NAVIGATION --
+-----------------------------
+vim.keymap.set({ "n", "v" }, "<leader><leader>", "<cmd>b#<CR>", { desc = "Switch to last bugger." })
+
+-- Switch between a handful set buffers fast
+local function switch_to_buffer_based_on_file_mark(mark_char)
+	local buf_id = vim.api.nvim_get_mark(mark_char, {})[3]
+
+	if buf_id > 0 and vim.api.nvim_buf_is_valid(buf_id) then
+		vim.cmd("b" .. buf_id)
+	else
+		vim.notify("Mark '" .. mark_char .. "' not found or buffer invalid.", vim.log.levels.WARN)
+	end
+end
+
+local function create_quick_slot(key)
+	local _key = key
+	vim.keymap.set({ "n", "v" }, "<leader>" .. _key, function()
+		switch_to_buffer_based_on_file_mark(string.upper(_key))
+	end, { desc = "Switch to slot U" .. _key })
+end
+
+create_quick_slot("u")
+create_quick_slot("i")
+create_quick_slot("o")
+create_quick_slot("p")
+
+-----------------------------
+-- INTRA-BUFFER NAVIGATION --
+-----------------------------
+vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz", { desc = "Move down half a page while keeping cursor centered." })
+vim.keymap.set({ "n", "v" }, "<C-u>", "<C-u>zz", { desc = "Move up half a page while keeping cursor centered." })
+vim.keymap.set("i", "jj", "<Esc>", { desc = "Leave insert mode" })
+
+-------------------
+-- YANK/PASTE... --
+-------------------
+-- don't overwrite yank register
+vim.keymap.set({ "n", "x" }, "x", '"_x', { desc = "Delete char without yanking" })
+vim.keymap.set({ "n", "x" }, "X", '"_d', { desc = "Delete text without yanking" })
+vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "Change without yanking" })
+vim.keymap.set("x", "p", '"_dP', { desc = "Paste without yanking" })
+
+-- when yanking selection, go to next line instead of jumping to the top
+vim.keymap.set("x", "y", "y']", { desc = "Yank and move to bottom" })
+
+-------------
+-- TOGGLES --
+-------------
+-- Show vertical ruler
+local function toggle_ruler(col)
+	local _col = tostring(col)
+	local current_ruler_position = vim.opt_local.colorcolumn:get()[1]
+
+	if current_ruler_position == _col then
+		vim.opt_local.colorcolumn = ""
+	else
+		vim.opt_local.colorcolumn = _col
+	end
+end
+
+vim.keymap.set({ "n", "v" }, "<leader>t|", function()
+	toggle_ruler(80)
+end, { desc = "Show 80char column ruler." })
+
+--------------
+-- QUICKFIX --
+--------------
+-- Defaults that come with Nvim 0.11: ]q, [q, ]Q, [Q
 vim.keymap.set("n", "<leader>qo", ":copen<CR>", { desc = "Open quickfix" })
 vim.keymap.set("n", "<leader>qc", ":cclose<CR>", { desc = "Close quickfix" })
-vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Next quickfix" })
-vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Prev quickfix" })
 
-vim.keymap.set("n", "<leader>qf", "<cmd>Telescope quickfix<CR>", { desc = "Browse quickfix" })
+vim.keymap.set("n", "<leader>qf", "<cmd>Telescope quickfix<CR>", { desc = "Telescope quickfix" })
+
+-- Search current word and send results to quickfix
 vim.keymap.set("n", "<leader>qs", function()
-	-- Search current word and send results to quickfix
 	vim.cmd("grep! " .. vim.fn.expand("<cword>"))
 	vim.cmd("copen")
 end, { desc = "Search word to quickfix" })
@@ -93,11 +111,30 @@ end, { desc = "Search word to quickfix" })
 -- Borders to separate code sections
 vim.keymap.set("n", "<leader>g#", "60i#<Esc>", { desc = "#####" })
 vim.keymap.set("n", "<leader>g=", "60i=<Esc>", { desc = "=====" })
+vim.keymap.set("n", "<leader>g-", "60i-<Esc>", { desc = "-----" })
+
 local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
 
--- console.log macro for JS/TS
+-- Lua
+-- Execute code on the spot
+vim.keymap.set("n", "<leader>cfx", "<cmd>source %<CR>", { desc = "Execute/source whole file." })
+vim.keymap.set("n", "<leader>cx", ":.lua<CR>", { desc = "Execute line of Lua." })
+vim.keymap.set("v", "<leader>cx", ":lua<CR>", { desc = "Execute selected region of Lua." })
+
+-- Create framed heading like so:
+-------------
+-- Heading --
+-------------
+-- Usage:
+-- Place cursor anywhere on like with a commented heading and press the keys.
+vim.keymap.set("n", "<leader>gt", "A --" .. esc .. "yyPVr-yyjp", { desc = "Create framed heading" })
+
+-- JS/TS
+-- console.log macro
 vim.api.nvim_create_augroup("js", { clear = true })
 
+-- Usage:
+-- Select symbol to log, press "@l"
 vim.api.nvim_create_autocmd("FileType", {
 	group = "js",
 	pattern = { "javascript", "typescript", "vue" },
@@ -106,7 +143,8 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Formatting macro for asm
+-- ASM
+-- Formatting macro
 vim.api.nvim_create_augroup("asm", { clear = true })
 
 vim.api.nvim_create_autocmd("FileType", {
