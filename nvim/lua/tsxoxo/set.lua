@@ -59,6 +59,7 @@ end)
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+vim.opt.diffopt:append("horizontal")
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 2
 

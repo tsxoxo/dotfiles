@@ -25,6 +25,7 @@ return {
 			local param = unpack(result)
 			local id, command, payload = unpack(param)
 			ts_client:exec_cmd({
+				title = "typescript server request",
 				command = "typescript.tsserverRequest",
 				arguments = {
 					command,

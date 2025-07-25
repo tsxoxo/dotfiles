@@ -15,8 +15,9 @@ return {
 				css = { "prettier" },
 				html = { "prettier" },
 				json = { "prettier" },
+				jsonc = { "prettier" },
 				yaml = { "prettier" },
-				markdown = { "prettier" },
+				-- markdown = { "prettier" },
 				lua = { "stylua" },
 				-- python = { "isort", "black" },
 				sh = { "shfmt" },
@@ -25,6 +26,11 @@ return {
 				lsp_fallback = true,
 				async = false,
 				timeout_ms = 1000,
+			},
+			formatters = {
+				prettier = {
+					prepend_args = { "--tab-width", 4 },
+				},
 			},
 		})
 

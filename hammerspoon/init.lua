@@ -1,6 +1,6 @@
 hs.window.animationDuration = 0
 
-local hyper = { "ctrl" }
+local hyper = { "ctrl cmd alt shift" }
 
 -- Apps
 hs.hotkey.bind(hyper, "h", function()
@@ -11,35 +11,49 @@ hs.hotkey.bind(hyper, "j", function()
 	hs.application.launchOrFocus("Google Chrome")
 end)
 
+hs.hotkey.bind(hyper, "u", function()
+	local app = hs.application.get("Chromium")
+	if app then
+		local windows = app:allWindows()
+		for _, win in ipairs(windows) do
+			if string.match(win:title(), "Playwright") then
+				win:focus()
+				return
+			end
+		end
+	end
+end)
+
 hs.hotkey.bind(hyper, "l", function()
 	hs.application.launchOrFocus("Spotify")
 end)
 
-hs.hotkey.bind(hyper, ";", function()
-	local dosboxApp = hs.application.get("dosbox-x")
-
-	function startDos()
-		local task = hs.task.new(
-			"/Applications/MacPorts/Dosbox-x.app/Contents/MacOS/Dosbox-x",
-			nil,
-			{ "-conf", os.getenv("HOME") .. "/dev/asm/dosbox-x.conf" }
-		)
-		task:start()
-	end
-	-- If we found the app, focus it
-	if dosboxApp then
-		local status, err = pcall(function()
-			dosboxApp:activate()
-		end)
-		if not status then
-			print("Error launching dosbox: " .. err)
-			startDos()
-		end
-	else
-		-- Launch it if not found
-		startDos()
-	end
-end)
+-- misclicking more often than actually using dosbox
+-- hs.hotkey.bind(hyper, ";", function()
+-- 	local dosboxApp = hs.application.get("dosbox-x")
+--
+-- 	function startDos()
+-- 		local task = hs.task.new(
+-- 			"/Applications/MacPorts/Dosbox-x.app/Contents/MacOS/Dosbox-x",
+-- 			nil,
+-- 			{ "-conf", os.getenv("HOME") .. "/dev/asm/dosbox-x.conf" }
+-- 		)
+-- 		task:start()
+-- 	end
+-- 	-- If we found the app, focus it
+-- 	if dosboxApp then
+-- 		local status, err = pcall(function()
+-- 			dosboxApp:activate()
+-- 		end)
+-- 		if not status then
+-- 			print("Error launching dosbox: " .. err)
+-- 			startDos()
+-- 		end
+-- 	else
+-- 		-- Launch it if not found
+-- 		startDos()
+-- 	end
+-- end)
 
 -- Reload config automatically when the file changes
 function reloadConfig(files)

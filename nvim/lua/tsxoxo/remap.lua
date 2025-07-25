@@ -66,7 +66,8 @@ vim.keymap.set("i", "jj", "<Esc>", { desc = "Leave insert mode" })
 vim.keymap.set({ "n", "x" }, "x", '"_x', { desc = "Delete char without yanking" })
 vim.keymap.set({ "n", "x" }, "X", '"_d', { desc = "Delete text without yanking" })
 vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "Change without yanking" })
-vim.keymap.set("x", "p", '"_dP', { desc = "Paste without yanking" })
+-- For pasting over selection without overwriting yank reg: use 'P'
+-- see :help v_P
 
 -- when yanking selection, go to next line instead of jumping to the top
 vim.keymap.set("x", "y", "y']", { desc = "Yank and move to bottom" })
@@ -89,6 +90,9 @@ end
 vim.keymap.set({ "n", "v" }, "<leader>t|", function()
 	toggle_ruler(80)
 end, { desc = "Show 80char column ruler." })
+
+-- convert list item to todo and mark as DONE == add [x] to start of line
+vim.keymap.set("n", "<leader>td", "^ciW- [x]<Esc>", { desc = "[x] DONE" })
 
 --------------
 -- QUICKFIX --
@@ -130,7 +134,7 @@ vim.keymap.set("v", "<leader>cx", ":lua<CR>", { desc = "Execute selected region 
 vim.keymap.set("n", "<leader>gt", "A --" .. esc .. "yyPVr-yyjp", { desc = "Create framed heading" })
 
 -- JS/TS
--- console.log macro
+-- console.log macro, js log
 vim.api.nvim_create_augroup("js", { clear = true })
 
 -- Usage:
@@ -140,6 +144,20 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "javascript", "typescript", "vue" },
 	callback = function()
 		vim.fn.setreg("l", "yoconsole.log('" .. esc .. "pa: ', " .. esc .. "pa)" .. esc)
+	end,
+})
+
+-- Bash
+-- log macro, bash log
+vim.api.nvim_create_augroup("bash", { clear = true })
+
+-- Usage:
+-- Select symbol to log, press "@l"
+vim.api.nvim_create_autocmd("FileType", {
+	group = "bash",
+	pattern = { "bash", "sh", "zsh" },
+	callback = function()
+		vim.fn.setreg("l", 'yoecho "' .. esc .. "pa: ${" .. esc .. 'pa}"' .. esc)
 	end,
 })
 

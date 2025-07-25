@@ -53,8 +53,14 @@ config.window_decorations = "RESIZE"
 
 -- Key bindings.
 config.keys = {
-	{ key = "UpArrow", action = wezterm.action.ScrollByPage(-0.5) },
-	{ key = "DownArrow", action = wezterm.action.ScrollByPage(0.5) },
+	{ key = "u", mods = "ALT", action = wezterm.action.ScrollByPage(-0.5) },
+	{ key = "d", mods = "ALT", action = wezterm.action.ScrollByPage(0.5) },
+	-- use hyper key (capslock) to trigger tmux
+	{
+		key = "e",
+		mods = "SHIFT|CTRL|ALT|CMD",
+		action = wezterm.action.SendKey({ key = "e", mods = "CTRL" }),
+	},
 }
 
 return config

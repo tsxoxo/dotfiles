@@ -168,8 +168,8 @@ export NVM_DIR="$HOME/.nvm"
 # Prioritize MacPorts Python over system one.
 export PATH="/opt/local/bin:$PATH"
 
-# Add app remover (thanks Claude).
-export PATH="$HOME/dev/utils:$PATH"
+# Add home-baked scripts.
+export PATH="$HOME/dev/bash/scripts:$PATH"
 # Add Cheatsheets.
 export PATH="$PATH:$HOME/dev/bash/cheatsheets"
 # Add FASM

@@ -98,43 +98,30 @@ Interact with Neovim's core state (buffers, windows, options, keymaps, etc.)
 Get buffer id from a file-mark:
 `local buf_id = vim.api.nvim_get_mark(mark_char, {})[3]`
 
+## DEBUG
+
+- formatting: `:ConformInfo`
+- LSP: `:checkhealth lsp` or `checkhealth vim.lsp`
+
 ## Keybindings
 
-### Categories
+### Code
 
-#### Workspace
+- View errors/warnings for whole file -- **<leader>D**
 
-- key candidates: w, s, p
+- put a bunch of stuff in quickfix list, move to next item: run telescope, `C-q` for all OR `<tab>...` and then `M-Q` for selection, `]q`
 
-- see all errors, ( search all files? )
-
-#### Search
-
-- key candidates: s, f
-
-#### Git
-
-#### LSP
-
-- key candidates: l, g
-
-### I've wanted
-
-#### LSP
-
-- View errors/warnings for whole file. Go to A. Fix it. Go to B. -- would involve quickfix list, and mb telescope
 - View errors/warnings for line (extend cut off text) -- **<leader>d**
 
 - Go to definition -- **gd**
-- Go to type reference. Go to next.
 
-- Rename symbol
+- Rename symbol -- **grn**
 
-#### Text manipulation
+## Feature wishlist
 
-- Delete into void; paste without yanking
+- see all errors/diagnostics in project
 
-## "Inspiration"
+## Inspiration
 
 - Primeagen
 - Josean

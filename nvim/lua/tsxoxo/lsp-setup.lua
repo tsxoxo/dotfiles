@@ -8,10 +8,10 @@
 vim.lsp.enable({
 	"cssls",
 	-- "emmet_ls",
-	-- "ts_ls",
 	"vtsls",
 	"vue_ls",
 	"lua_ls",
+	"bashls",
 })
 
 -- Change the Diagnostic symbols in the sign column (gutter)
@@ -20,6 +20,8 @@ for type, icon in pairs(signs) do
 	local hl = "DiagnosticSign" .. type
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
+
+-- vim.opt.completeopt = { "menuone", "noselect", "popup" }
 
 ---------------------
 --- Setup keymaps ---
@@ -62,6 +64,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 					})
 				end
 			end
+
+			-- Auto-completion
+			-- if client:supports_method("textDocument/completion") then
+			-- 	vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+			-- end
 		end
 
 		vim.keymap.set("n", "K", function()

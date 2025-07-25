@@ -29,7 +29,7 @@ return {
 				"emmet_ls",
 				"cssls",
 				"tailwindcss",
-				-- "ts_ls", -- TS support in Vue files.
+				"ts_ls",
 				"vtsls",
 				"vue_ls@3.0.0-alpha.10",
 				"lua_ls",
