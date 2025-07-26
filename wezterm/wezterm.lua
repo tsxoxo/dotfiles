@@ -61,6 +61,28 @@ config.keys = {
 		mods = "SHIFT|CTRL|ALT|CMD",
 		action = wezterm.action.SendKey({ key = "e", mods = "CTRL" }),
 	},
+	-- hyper for scrolling in nvim
+	{
+		key = "d",
+		mods = "SHIFT|CTRL|ALT|CMD",
+		action = wezterm.action.SendKey({ key = "d", mods = "CTRL" }),
+	},
+	{
+		key = "u",
+		mods = "SHIFT|CTRL|ALT|CMD",
+		action = wezterm.action.SendKey({ key = "u", mods = "CTRL" }),
+	},
+	{
+		key = "p",
+		mods = "SHIFT|CTRL|ALT|CMD",
+		action = wezterm.action.SendKey({ key = "p", mods = "CTRL" }),
+	},
+	-- hyper for toggling autocomplete in nvim
+	{
+		key = "n",
+		mods = "SHIFT|CTRL|ALT|CMD",
+		action = wezterm.action.SendKey({ key = "n", mods = "CTRL" }),
+	},
 }
 
 return config
