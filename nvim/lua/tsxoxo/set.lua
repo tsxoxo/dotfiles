@@ -111,3 +111,8 @@ vim.opt.tabstop = 4
 
 -- Set indentation level to 4 spaces
 vim.opt.shiftwidth = 2
+
+-- ABBREVIATIONS
+--
+-- Em-Dash
+-- vim.cmd("iabbrev -- —")

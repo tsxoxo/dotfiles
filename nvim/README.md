@@ -2,6 +2,10 @@
 
 ## Cheatsheet
 
+### Reload config file
+
+`:so %`
+
 ### Jumping
 
 see full list at ":help ']" and after
@@ -64,6 +68,8 @@ Two methods:
 ### Lua API basics
 
 vim.cmd, vim.api, vim.fn, and vim.opt/opt_local/opt_window
+
+NB: remember your friends: `:help vim.opt`, `:help lua-guide-options`
 
 #### Examples
 

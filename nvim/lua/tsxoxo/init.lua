@@ -90,6 +90,18 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 	end,
 })
 
+-- Auto-format markdown
+-- NOTE: used it for 3 days. Had some undesired behavior (collapsing spaces, joining lines)
+--
+-- vim.api.nvim_create_autocmd("FileType", {
+-- 	desc = "Add [a]uto-format to formatting-options",
+-- 	pattern = "markdown",
+-- 	callback = function()
+-- 		print("format")
+-- 		vim.opt_local.formatoptions:append("a")
+-- 	end,
+-- })
+--
 -- .asm files in /fasm are fasm
 -- vim.api.nvim_create_autocmd("BufReadPost", {
 -- 	pattern = "*/APPS/*.asm",

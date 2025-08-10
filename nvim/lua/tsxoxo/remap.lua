@@ -57,6 +57,7 @@ create_quick_slot("p")
 -----------------------------
 vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz", { desc = "Move down half a page while keeping cursor centered." })
 vim.keymap.set({ "n", "v" }, "<C-u>", "<C-u>zz", { desc = "Move up half a page while keeping cursor centered." })
+vim.keymap.set("i", "<C-l>", "<Right> ", { desc = "Move cursor from between brackets." })
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Leave insert mode" })
 
 -------------------
@@ -112,6 +113,9 @@ end, { desc = "Search word to quickfix" })
 --------------
 -- Snippets --
 --------------
+-- Em-Dash
+vim.keymap.set("i", "--", "—", { desc = "Em dash" })
+
 -- Borders to separate code sections
 vim.keymap.set("n", "<leader>g#", "60i#<Esc>", { desc = "#####" })
 vim.keymap.set("n", "<leader>g=", "60i=<Esc>", { desc = "=====" })
@@ -173,3 +177,13 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.fn.setreg("f", "0f;i " .. esc .. "diw" .. "i" .. tab .. esc)
 	end,
 })
+
+-------------
+--  DEBUG  --
+-------------
+---
+--- Show info about diagnostic on current line (e.g. who produced it)
+
+vim.keymap.set("n", "<leader>c?", function()
+	print(vim.inspect(vim.diagnostic.get(0)))
+end, { desc = "DEBUG: show info about diagnostic" })

@@ -116,13 +116,18 @@ alias vimconf="nvim ~/dotfiles/nvim"
 alias tmuxconf="nvim ~/dotfiles/tmux/.tmux.conf"
 alias wezconf="nvim ~/dotfiles/wezterm/wezterm.lua"
 
+dutop() {
+  du -sh "${1:-.}"/* 2>/dev/null | sort -hr | head -10
+}
+
 # Specific software
 open_with_chrome() {
-  if [[ -z $1 ]] then
+  if [[ -z "$1" ]]; then
     echo "Usage: chrome <filename>"
+    exit 1
   fi
 
-  open -a "/Applications/Google Chrome.app/" $1
+  open -a "/Applications/Google Chrome.app/" "$1"
 }
 eza_col_icons() {
   command eza -1F --color=always --icons=always --sort=name --group-directories-first "$@"
