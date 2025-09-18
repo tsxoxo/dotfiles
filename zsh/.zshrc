@@ -107,6 +107,7 @@ fi
 # =============================================
 # Can make modules: see $ZSH_CUSTOM folder.
 
+alias mv="mv -iv"
 alias mkdir="mkdir -pv"
 alias conf="nvim ~/dotfiles"
 alias zshconf="nvim ~/.zshrc"

@@ -44,7 +44,7 @@ local function create_quick_slot(key)
 	local _key = key
 	vim.keymap.set({ "n", "v" }, "<leader>" .. _key, function()
 		switch_to_buffer_based_on_file_mark(string.upper(_key))
-	end, { desc = "Switch to slot U" .. _key })
+	end, { desc = "Switch to buffer " .. _key })
 end
 
 create_quick_slot("u")
@@ -72,6 +72,9 @@ vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "Change without yanking" })
 
 -- when yanking selection, go to next line instead of jumping to the top
 vim.keymap.set("x", "y", "y']", { desc = "Yank and move to bottom" })
+
+-- yank whole file
+vim.keymap.set("n", "<leader>y", ":%y<CR>", { desc = "Yank whole file" })
 
 -------------
 -- TOGGLES --
@@ -136,6 +139,21 @@ vim.keymap.set("v", "<leader>cx", ":lua<CR>", { desc = "Execute selected region 
 -- Usage:
 -- Place cursor anywhere on like with a commented heading and press the keys.
 vim.keymap.set("n", "<leader>gt", "A --" .. esc .. "yyPVr-yyjp", { desc = "Create framed heading" })
+
+-- LANGUAGE SPECIFIC
+--
+
+-- man
+vim.api.nvim_create_augroup("man", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = "man",
+	pattern = { "man" },
+	callback = function()
+		-- In 'man' mode: jump to option 'x'
+		vim.keymap.set({ "n", "v" }, "<leader>sm", [[/\v^\s*[?-]], { desc = "[man] Jump to option x" })
+	end,
+})
 
 -- JS/TS
 -- console.log macro, js log
